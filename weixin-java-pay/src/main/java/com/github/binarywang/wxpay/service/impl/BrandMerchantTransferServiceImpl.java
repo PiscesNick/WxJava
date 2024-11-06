@@ -30,7 +30,7 @@ public class BrandMerchantTransferServiceImpl implements BrandMerchantTransferSe
   public BrandTransferBatchesResult createBrandTransfer(BrandTransferBatchesRequest request) throws WxPayException {
 
     String url = String.format("%s/v3/fund-app/brand-redpacket/brand-merchant-batches", this.wxPayService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.wxPayService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.wxPayService.getConfig().getVerifier().getPublicKey());
 
     String response = wxPayService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(response, BrandTransferBatchesResult.class);

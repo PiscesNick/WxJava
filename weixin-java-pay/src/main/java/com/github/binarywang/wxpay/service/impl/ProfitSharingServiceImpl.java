@@ -58,7 +58,7 @@ public class ProfitSharingServiceImpl implements ProfitSharingService {
   @Override
   public ProfitSharingV3Result profitSharingV3(ProfitSharingV3Request request) throws WxPayException {
     String url = String.format("%s/v3/profitsharing/orders", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ProfitSharingV3Result.class);
   }
@@ -99,7 +99,7 @@ public class ProfitSharingServiceImpl implements ProfitSharingService {
   @Override
   public ProfitSharingReceiverV3Result addReceiverV3(ProfitSharingReceiverV3Request request) throws WxPayException {
     String url = String.format("%s/v3/profitsharing/receivers/add", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ProfitSharingReceiverV3Result.class);
   }
@@ -107,7 +107,7 @@ public class ProfitSharingServiceImpl implements ProfitSharingService {
   @Override
   public ProfitSharingReceiverV3Result removeReceiverV3(ProfitSharingReceiverV3Request request) throws WxPayException {
     String url = String.format("%s/v3/profitsharing/receivers/delete", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ProfitSharingReceiverV3Result.class);
   }
@@ -204,7 +204,7 @@ public class ProfitSharingServiceImpl implements ProfitSharingService {
   @Override
   public ProfitSharingReturnV3Result profitSharingReturnV3(ProfitSharingReturnV3Request request) throws WxPayException {
     String url = String.format("%s/v3/profitsharing/return-orders", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ProfitSharingReturnV3Result.class);
   }
@@ -240,7 +240,7 @@ public class ProfitSharingServiceImpl implements ProfitSharingService {
   @Override
   public ProfitSharingUnfreezeV3Result profitSharingUnfreeze(ProfitSharingUnfreezeV3Request request) throws WxPayException {
     String url = String.format("%s/v3/profitsharing/orders/unfreeze", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ProfitSharingUnfreezeV3Result.class);
   }

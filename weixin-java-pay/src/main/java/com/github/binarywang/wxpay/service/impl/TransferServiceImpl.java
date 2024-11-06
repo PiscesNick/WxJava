@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
@@ -29,9 +30,9 @@ public class TransferServiceImpl implements TransferService {
   public TransferBatchesResult transferBatches(TransferBatchesRequest request) throws WxPayException {
     String url = String.format("%s/v3/transfer/batches", this.payService.getPayBaseUrl());
     List<TransferBatchesRequest.TransferDetail> transferDetailList = request.getTransferDetailList();
-    X509Certificate validCertificate = this.payService.getConfig().getVerifier().getValidCertificate();
+    PublicKey publicKey = this.payService.getConfig().getVerifier().getPublicKey();
     for (TransferBatchesRequest.TransferDetail detail : transferDetailList) {
-      RsaCryptoUtil.encryptFields(detail, validCertificate);
+      RsaCryptoUtil.encryptFields(detail, publicKey);
     }
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, TransferBatchesResult.class);

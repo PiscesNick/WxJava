@@ -34,7 +34,7 @@ public class BusinessCircleServiceImpl implements BusinessCircleService {
   @Override
   public void notifyPoints(PointsNotifyRequest request) throws WxPayException {
     String url = String.format("%s/v3/businesscircle/points/notify", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
   }
 

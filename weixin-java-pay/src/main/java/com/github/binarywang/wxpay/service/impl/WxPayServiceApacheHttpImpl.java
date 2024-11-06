@@ -171,7 +171,7 @@ public class WxPayServiceApacheHttpImpl extends BaseWxPayServiceImpl {
     HttpPost httpPost = this.createHttpPost(url, requestStr);
     httpPost.addHeader(ACCEPT, APPLICATION_JSON);
     httpPost.addHeader(CONTENT_TYPE, APPLICATION_JSON);
-    String serialNumber = getConfig().getVerifier().getValidCertificate().getSerialNumber().toString(16).toUpperCase();
+    String serialNumber = getConfig().getVerifier().getSerialNumber();
     httpPost.addHeader("Wechatpay-Serial", serialNumber);
     try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
       //v3已经改为通过状态码判断200 204 成功
@@ -251,7 +251,7 @@ public class WxPayServiceApacheHttpImpl extends BaseWxPayServiceImpl {
     HttpGet httpGet = new HttpGet(url);
     httpGet.addHeader(ACCEPT, APPLICATION_JSON);
     httpGet.addHeader(CONTENT_TYPE, APPLICATION_JSON);
-    String serialNumber = getConfig().getVerifier().getValidCertificate().getSerialNumber().toString(16).toUpperCase();
+    String serialNumber = getConfig().getVerifier().getSerialNumber();
     httpGet.addHeader("Wechatpay-Serial", serialNumber);
     return this.requestV3(url, httpGet);
   }

@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.Collection;
@@ -30,13 +31,20 @@ public class RsaCryptoUtil {
 
   public static void encryptFields(Object encryptObject, X509Certificate certificate) throws WxPayException {
     try {
-      encryptField(encryptObject, certificate);
+      encryptField(encryptObject, certificate.getPublicKey());
+    } catch (Exception e) {
+      throw new WxPayException("敏感信息加密失败", e);
+    }
+  }
+  public static void encryptFields(Object encryptObject, PublicKey publicKey) throws WxPayException {
+    try {
+      encryptField(encryptObject, publicKey);
     } catch (Exception e) {
       throw new WxPayException("敏感信息加密失败", e);
     }
   }
 
-  private static void encryptField(Object encryptObject, X509Certificate certificate) throws IllegalAccessException, IllegalBlockSizeException {
+  private static void encryptField(Object encryptObject, PublicKey publicKey) throws IllegalAccessException, IllegalBlockSizeException {
     Class<?> infoClass = encryptObject.getClass();
     Field[] infoFieldArray = infoClass.getDeclaredFields();
     for (Field field : infoFieldArray) {
@@ -48,7 +56,7 @@ public class RsaCryptoUtil {
           if (oldValue != null) {
             String oldStr = (String) oldValue;
             if (!"".equals(oldStr.trim())) {
-              field.set(encryptObject, encryptOAEP(oldStr, certificate));
+              field.set(encryptObject, encryptOAEP(oldStr, publicKey));
             }
           }
         } else {
@@ -61,22 +69,22 @@ public class RsaCryptoUtil {
             Collection collection = (Collection) obj;
             for (Object o : collection) {
               if (o != null) {
-                encryptField(o, certificate);
+                encryptField(o, publicKey);
               }
             }
           } else {
-            encryptField(obj, certificate);
+            encryptField(obj, publicKey);
           }
         }
       }
     }
   }
 
-  public static String encryptOAEP(String message, X509Certificate certificate)
+  public static String encryptOAEP(String message, PublicKey publicKey)
     throws IllegalBlockSizeException {
     try {
       Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-1AndMGF1Padding");
-      cipher.init(Cipher.ENCRYPT_MODE, certificate.getPublicKey());
+      cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
       byte[] data = message.getBytes(StandardCharsets.UTF_8);
       byte[] ciphertext = cipher.doFinal(data);

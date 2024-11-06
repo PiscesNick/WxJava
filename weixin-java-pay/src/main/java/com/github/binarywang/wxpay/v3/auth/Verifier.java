@@ -1,5 +1,6 @@
 package com.github.binarywang.wxpay.v3.auth;
 
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 
 public interface Verifier {
@@ -7,4 +8,7 @@ public interface Verifier {
 
 
   X509Certificate getValidCertificate();
+
+  PublicKey getPublicKey();
+  String getSerialNumber();
 }

@@ -24,7 +24,7 @@ public class BankServiceImpl implements BankService {
   @Override
   public BankAccountResult searchBanksByBankAccount(String accountNumber) throws WxPayException {
     try {
-      String encryptAccountNumber = RsaCryptoUtil.encryptOAEP(accountNumber, this.payService.getConfig().getVerifier().getValidCertificate());
+      String encryptAccountNumber = RsaCryptoUtil.encryptOAEP(accountNumber, this.payService.getConfig().getVerifier().getPublicKey());
       accountNumber = URLEncoder.encode(encryptAccountNumber, "UTF-8");
     } catch (Exception e) {
       throw new RuntimeException("银行卡号加密异常!", e);

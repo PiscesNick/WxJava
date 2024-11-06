@@ -20,9 +20,7 @@ public class Applyment4SubServiceImpl implements Applyment4SubService {
 
   private void encryptFiled(Object request) throws WxPayException {
 
-    X509Certificate validCertificate = payService.getConfig().getVerifier().getValidCertificate();
-
-    RsaCryptoUtil.encryptFields(request, validCertificate);
+    RsaCryptoUtil.encryptFields(request, payService.getConfig().getVerifier().getPublicKey());
   }
 
 

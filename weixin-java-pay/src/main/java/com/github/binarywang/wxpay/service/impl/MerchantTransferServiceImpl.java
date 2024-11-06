@@ -30,7 +30,7 @@ public class MerchantTransferServiceImpl implements MerchantTransferService {
     }
 
     String url = String.format("%s/v3/transfer/batches", this.wxPayService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.wxPayService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.wxPayService.getConfig().getVerifier().getPublicKey());
 
     String response = wxPayService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(response, TransferCreateResult.class);

@@ -32,7 +32,7 @@ public class MarketingFavorServiceImpl implements MarketingFavorService {
   @Override
   public FavorStocksCreateResult createFavorStocksV3(FavorStocksCreateRequest request) throws WxPayException {
     String url = String.format("%s/v3/marketing/favor/coupon-stocks", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, FavorStocksCreateResult.class);
   }
@@ -40,7 +40,7 @@ public class MarketingFavorServiceImpl implements MarketingFavorService {
   @Override
   public FavorCouponsCreateResult createFavorCouponsV3(String openid, FavorCouponsCreateRequest request) throws WxPayException {
     String url = String.format("%s/v3/marketing/favor/users/%s/coupons", this.payService.getPayBaseUrl(), openid);
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, FavorCouponsCreateResult.class);
   }
@@ -48,7 +48,7 @@ public class MarketingFavorServiceImpl implements MarketingFavorService {
   @Override
   public FavorStocksStartResult startFavorStocksV3(String stockId, FavorStocksSetRequest request) throws WxPayException {
     String url = String.format("%s/v3/marketing/favor/stocks/%s/start", this.payService.getPayBaseUrl(), stockId);
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, FavorStocksStartResult.class);
   }
@@ -148,7 +148,7 @@ public class MarketingFavorServiceImpl implements MarketingFavorService {
   @Override
   public FavorCallbacksSaveResult saveFavorCallbacksV3(FavorCallbacksSaveRequest request) throws WxPayException {
     String url = String.format("%s/v3/marketing/favor/callbacks", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, FavorCallbacksSaveResult.class);
   }
@@ -156,7 +156,7 @@ public class MarketingFavorServiceImpl implements MarketingFavorService {
   @Override
   public FavorStocksPauseResult pauseFavorStocksV3(String stockId, FavorStocksSetRequest request) throws WxPayException {
     String url = String.format("%s/v3/marketing/favor/stocks/%s/pause", this.payService.getPayBaseUrl(), stockId);
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, FavorStocksPauseResult.class);
   }
@@ -164,7 +164,7 @@ public class MarketingFavorServiceImpl implements MarketingFavorService {
   @Override
   public FavorStocksRestartResult restartFavorStocksV3(String stockId, FavorStocksSetRequest request) throws WxPayException {
     String url = String.format("%s/v3/marketing/favor/stocks/%s/restart", this.payService.getPayBaseUrl(), stockId);
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, FavorStocksRestartResult.class);
   }

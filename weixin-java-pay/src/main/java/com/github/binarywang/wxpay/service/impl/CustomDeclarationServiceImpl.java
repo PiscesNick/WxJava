@@ -17,6 +17,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 
@@ -86,15 +87,17 @@ public class CustomDeclarationServiceImpl implements CustomDeclarationService {
   private X509Certificate getValidCertificate() {
     return this.payService.getConfig().getVerifier().getValidCertificate();
   }
+  private PublicKey getPublicKey() {
+    return this.payService.getConfig().getVerifier().getPublicKey();
+  }
 
   private String encryptOAEP(String message)
     throws IllegalBlockSizeException {
-    X509Certificate certificate = getValidCertificate();
     try {
       // 身份信息校验 RSA 加密，填充方案使用 `RSAES-PKCS1-v1_5`
       // https://pay.weixin.qq.com/wiki/doc/api/wxpay/ch/declarecustom_ch/chapter3_2.shtml
       Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-      cipher.init(Cipher.ENCRYPT_MODE, certificate.getPublicKey());
+      cipher.init(Cipher.ENCRYPT_MODE, getPublicKey());
 
       byte[] data = message.getBytes(StandardCharsets.UTF_8);
       byte[] ciphertext = cipher.doFinal(data);

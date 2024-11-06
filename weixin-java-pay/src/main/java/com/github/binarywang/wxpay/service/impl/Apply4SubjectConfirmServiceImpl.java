@@ -42,7 +42,7 @@ public class Apply4SubjectConfirmServiceImpl implements Apply4SubjectConfirmServ
   @Override
   public ApplySubjectConfirmCreateResult applyment(ApplySubjectConfirmCreateRequest request) throws WxPayException {
     String url = String.format("%s/v3/apply4subject/applyment", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String result = payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ApplySubjectConfirmCreateResult.class);
   }

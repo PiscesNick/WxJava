@@ -22,6 +22,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
@@ -202,6 +203,13 @@ public class WxPayConfig {
   private String httpProxyPassword;
 
   /**
+   * 证书公钥配置（替换平台证书）
+   */
+  private String certPublicKeyId;
+  private byte[] certPublicKeyContent;
+  private String certPublicKeyPath;
+
+  /**
    * v3接口下证书检验对象，通过改对象可以获取到X509Certificate，进一步对敏感信息加密
    * <a href="https://wechatpay-api.gitbook.io/wechatpay-api-v3/qian-ming-zhi-nan-1/min-gan-xin-xi-jia-mi">文档</a>
    */
@@ -297,9 +305,17 @@ public class WxPayConfig {
       //构造Http Proxy正向代理
       WxPayHttpProxy wxPayHttpProxy = getWxPayHttpProxy();
 
-      AutoUpdateCertificatesVerifier certificatesVerifier = new AutoUpdateCertificatesVerifier(
-        new WxPayCredentials(mchId, new PrivateKeySigner(certSerialNo, merchantPrivateKey)),
-        this.getApiV3Key().getBytes(StandardCharsets.UTF_8), this.getCertAutoUpdateTime(), this.getPayBaseUrl(), wxPayHttpProxy);
+      Verifier certificatesVerifier;
+      if(this.getCertPublicKeyContent()!=null || !StringUtils.isBlank(this.getCertPublicKeyPath())){
+        InputStream keyInputStream = this.loadConfigInputStream(null, this.getCertPublicKeyPath(),
+          this.getCertPublicKeyContent(), "publicKeyPath");
+        PublicKey publicKey= PemUtils.loadPublicKey(keyInputStream);
+        certificatesVerifier = new CertPublicKeyVerifier(this.getCertPublicKeyId(), publicKey);
+      }else{
+        certificatesVerifier = new AutoUpdateCertificatesVerifier(
+          new WxPayCredentials(mchId, new PrivateKeySigner(certSerialNo, merchantPrivateKey)),
+          this.getApiV3Key().getBytes(StandardCharsets.UTF_8), this.getCertAutoUpdateTime(), this.getPayBaseUrl(), wxPayHttpProxy);
+      }
 
       WxPayV3HttpClientBuilder wxPayV3HttpClientBuilder = WxPayV3HttpClientBuilder.create()
         .withMerchant(mchId, certSerialNo, merchantPrivateKey)

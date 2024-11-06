@@ -47,7 +47,7 @@ public class EcommerceServiceImpl implements EcommerceService {
   @Override
   public ApplymentsResult createApply(ApplymentsRequest request) throws WxPayException {
     String url = String.format("%s/v3/ecommerce/applyments/", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
 
     String result = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(result, ApplymentsResult.class);
@@ -209,7 +209,7 @@ public class EcommerceServiceImpl implements EcommerceService {
   @Override
   public ProfitSharingResult profitSharing(ProfitSharingRequest request) throws WxPayException {
     String url = String.format("%s/v3/ecommerce/profitsharing/orders", this.payService.getPayBaseUrl());
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     String response = this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
     return GSON.fromJson(response, ProfitSharingResult.class);
   }
@@ -349,7 +349,7 @@ public class EcommerceServiceImpl implements EcommerceService {
   @Override
   public void modifySettlement(String subMchid, SettlementRequest request) throws WxPayException {
     String url = String.format("%s/v3/apply4sub/sub_merchants/%s/modify-settlement", this.payService.getPayBaseUrl(), subMchid);
-    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getValidCertificate());
+    RsaCryptoUtil.encryptFields(request, this.payService.getConfig().getVerifier().getPublicKey());
     this.payService.postV3WithWechatpaySerial(url, GSON.toJson(request));
   }
 

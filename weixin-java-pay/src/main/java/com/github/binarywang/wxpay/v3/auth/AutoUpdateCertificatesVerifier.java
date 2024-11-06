@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.security.PublicKey;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
@@ -229,5 +230,15 @@ public class AutoUpdateCertificatesVerifier implements Verifier {
       .map(resp -> resp.get("message"))
       .map(JsonElement::getAsString)
       .orElse("update cert failed");
+  }
+
+  @Override
+  public PublicKey getPublicKey() {
+    return getValidCertificate().getPublicKey();
+  }
+
+  @Override
+  public String getSerialNumber() {
+    return getValidCertificate().getSerialNumber().toString(16).toUpperCase();
   }
 }

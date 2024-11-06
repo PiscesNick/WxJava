@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
@@ -44,6 +45,34 @@ public class PemUtils {
       throw new WxRuntimeException("无效的密钥");
     }
   }
+
+  public static PublicKey loadPublicKey(InputStream inputStream) {
+    try {
+      ByteArrayOutputStream array = new ByteArrayOutputStream();
+      byte[] buffer = new byte[1024];
+      int length;
+      while ((length = inputStream.read(buffer)) != -1) {
+        array.write(buffer, 0, length);
+      }
+
+      String publicKey = array.toString("utf-8")
+          .replace("-----BEGIN PUBLIC KEY-----", "")
+          .replace("-----END PUBLIC KEY-----", "")
+          .replaceAll("\\s+", "");
+
+      KeyFactory kf = KeyFactory.getInstance("RSA");
+      return kf.generatePublic(
+          new PKCS8EncodedKeySpec(Base64.getDecoder().decode(publicKey)));
+    } catch (NoSuchAlgorithmException e) {
+      throw new WxRuntimeException("当前Java环境不支持RSA", e);
+    } catch (InvalidKeySpecException e) {
+      throw new WxRuntimeException("无效的密钥格式");
+    } catch (IOException e) {
+      throw new WxRuntimeException("无效的密钥");
+    }
+  }
+
+
 
   public static X509Certificate loadCertificate(InputStream inputStream) {
     try {

@@ -46,12 +46,12 @@ public class PartnerTransferServiceImpl implements PartnerTransferService {
     request.getTransferDetailList().forEach(p -> {
       try {
         String userName = RsaCryptoUtil.encryptOAEP(p.getUserName(),
-          this.payService.getConfig().getVerifier().getValidCertificate());
+          this.payService.getConfig().getVerifier().getPublicKey());
         p.setUserName(userName);
 
         if (StringUtil.isNotBlank(p.getUserIdCard())) {
           String userIdCard = RsaCryptoUtil.encryptOAEP(p.getUserIdCard(),
-            this.payService.getConfig().getVerifier().getValidCertificate());
+            this.payService.getConfig().getVerifier().getPublicKey());
           p.setUserIdCard(userIdCard);
         }
       } catch (IllegalBlockSizeException e) {

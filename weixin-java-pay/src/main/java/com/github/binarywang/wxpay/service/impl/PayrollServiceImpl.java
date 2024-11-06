@@ -42,9 +42,9 @@ public class PayrollServiceImpl implements PayrollService {
     public TokensResult payrollCardTokens(TokensRequest request) throws WxPayException {
         String url = String.format("%s/v3/payroll-card/tokens", payService.getPayBaseUrl());
         try {
-            String userName = RsaCryptoUtil.encryptOAEP(request.getUserName(), payService.getConfig().getVerifier().getValidCertificate());
+            String userName = RsaCryptoUtil.encryptOAEP(request.getUserName(), payService.getConfig().getVerifier().getPublicKey());
             request.setUserName(userName);
-            String idCardNumber = RsaCryptoUtil.encryptOAEP(request.getIdCardNumber(), payService.getConfig().getVerifier().getValidCertificate());
+            String idCardNumber = RsaCryptoUtil.encryptOAEP(request.getIdCardNumber(), payService.getConfig().getVerifier().getPublicKey());
             request.setIdCardNumber(idCardNumber);
         } catch (IllegalBlockSizeException e) {
             throw new RuntimeException("加密异常!", e);
@@ -156,9 +156,9 @@ public class PayrollServiceImpl implements PayrollService {
     public PreOrderWithAuthResult payrollCardPreOrderWithAuth(PreOrderWithAuthRequest request) throws WxPayException {
         String url = String.format("%s/v3/payroll-card/authentications/pre-order-with-auth", payService.getPayBaseUrl());
         try {
-            String userName = RsaCryptoUtil.encryptOAEP(request.getUserName(), payService.getConfig().getVerifier().getValidCertificate());
+            String userName = RsaCryptoUtil.encryptOAEP(request.getUserName(), payService.getConfig().getVerifier().getPublicKey());
             request.setUserName(userName);
-            String idCardNumber = RsaCryptoUtil.encryptOAEP(request.getIdCardNumber(), payService.getConfig().getVerifier().getValidCertificate());
+            String idCardNumber = RsaCryptoUtil.encryptOAEP(request.getIdCardNumber(), payService.getConfig().getVerifier().getPublicKey());
             request.setIdCardNumber(idCardNumber);
         } catch (IllegalBlockSizeException e) {
             throw new RuntimeException("敏感信息加密异常!", e);

@@ -3,10 +3,7 @@ package com.github.binarywang.wxpay.v3.auth;
 import me.chanjar.weixin.common.error.WxRuntimeException;
 
 import java.math.BigInteger;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
@@ -62,4 +59,13 @@ public class CertificatesVerifier implements Verifier {
     throw new NoSuchElementException("没有有效的微信支付平台证书");
   }
 
+  @Override
+  public PublicKey getPublicKey() {
+    return getValidCertificate().getPublicKey();
+  }
+
+  @Override
+  public String getSerialNumber() {
+    return getValidCertificate().getSerialNumber().toString(16).toUpperCase();
+  }
 }
